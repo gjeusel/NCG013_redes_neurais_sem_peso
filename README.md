@@ -12,4 +12,15 @@ Standards and Technology
 
 Switch to jpg database with [mnist-to-jpg.py](https://gist.github.com/ischlag/41d15424e7989b936c1609b53edd1390)
 
-Python Library Used : [PyWANN](https://github.com/firmino/PyWANN)
+Python Library Used :
+- [TensorFlow](https://www.tensorflow.org/) required by mnist-to-jpg.py
+- [PIL](https://pypi.python.org/pypi/PIL)
+- [PyWANN](https://github.com/firmino/PyWANN)
+
+## Usage :
+- git clone https://github.com/gjeusel/NCG013_redes_neurais_sem_peso.git
+- cd NCG013_redes_neurais_sem_peso/
+- python mnist-to-jpg.py
+- python redes_neurais_sem_peso.py --limit_train_set 900 --limit_test_set 100
+
+- python redes_neurais_sem_peso.py --help for more infos

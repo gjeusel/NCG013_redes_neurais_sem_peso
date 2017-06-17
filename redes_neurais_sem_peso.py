@@ -18,6 +18,7 @@ import pandas as pd
 import seaborn as sns
 
 import math
+import itertools
 import numpy as np
 
 from PIL import Image, ImageOps # Python Image Library
@@ -50,6 +51,7 @@ default_csv_dir = working_dir_path+"/mnist/"
 #Cmap
 from matplotlib.colors import ListedColormap
 my_cmap = ListedColormap(sns.color_palette("OrRd", 10).as_hex())
+my_cmap_conf_mat = ListedColormap(sns.color_palette("OrRd", 20).as_hex())
 my_cmap_2 = ListedColormap(sns.color_palette("RdYlBu", 10).as_hex())
 
 #Some colors:
@@ -495,7 +497,8 @@ def display_barplot_of_classes(y_train, y_test, cfg_fig=default_cfg_fig):
 ##############################################
 # POST Processing analysis functions :
 
-def plot_confusion_mat(y_true, y_predicted, cfg_fig=default_cfg_fig):
+def plot_confusion_mat(y_true, y_predicted, cmap=plt.cm.Blues,
+                       cfg_fig=default_cfg_fig):
 #{{{
     ''' Plot the confusion matrix.
 
@@ -506,25 +509,31 @@ def plot_confusion_mat(y_true, y_predicted, cfg_fig=default_cfg_fig):
 
     fig, ax = plt.subplots(figsize=cfg_fig['figsize'])
 
+    classes = np.arange(10)
 
     # Realizing offset on xticks and yticks but keeping horizontal and
     # verticale whites lines by removing grid objets then add lines objets
     xticks_arr = np.arange(0,M.shape[0],1)
     yticks_arr =  np.arange(0,M.shape[1],1)
 
-    plt.xticks(xticks_arr+0.5, xticks_arr)
-    plt.yticks(yticks_arr+0.5, yticks_arr)
+    # plt.xticks(xticks_arr, xticks_arr)
+    # plt.yticks(yticks_arr, yticks_arr)
+
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes)#, rotation=45)
+    plt.yticks(tick_marks, classes)
 
     ax.grid(False)
     for j in xticks_arr:
-        ax.axvline(j, color='w')
+        ax.axvline(j+0.5, color='w')
     for i in yticks_arr:
-        ax.axhline(i, color='w')
+        ax.axhline(i+0.5, color='w')
 
-    im = ax.imshow(M, cmap=my_cmap, interpolation='none')
+    im = ax.imshow(M, cmap=cmap, interpolation='nearest')
 
-    # get colorbar smaller than matrix
-    plt.colorbar(im, fraction=0.046, pad=0.04)
+    plt.colorbar(im, fraction=0.046, pad=0.04) # get colorbar smaller than matrix
+
+    # plt.colorbar()
 
     # want a more natural, table-like display
     ax.invert_yaxis()
@@ -535,6 +544,13 @@ def plot_confusion_mat(y_true, y_predicted, cfg_fig=default_cfg_fig):
 
     plt.xlabel('Predicted Value')
     plt.ylabel('True Value')
+
+    # Adding the number in each cell :
+    thresh = M.max() / 2.
+    for i, j in itertools.product(range(M.shape[0]), range(M.shape[1])):
+        plt.text(j, i, M[i, j],
+                 horizontalalignment="center",
+                 color="white" if M[i, j] > thresh else "black")
 
     if cfg_fig['bool']:
         filename = cfg_fig['path'] + cfg_fig['fout_name']
@@ -676,11 +692,13 @@ def main(argv=None):
     dfs.SupportVectorMachine()
     dfs.NearestNeighbors()
     dfs.MultiLayerPerceptron()
+    fig, ax = display_barplot_of_classes(dfs.y_train, dfs.y_test,
+            cfg_fig=cfg_fig)
 
     # Some results with binarization of the pictures :
     dfs.NearestNeighbors(threshold=15)
     dfs.MultiLayerPerceptron(threshold=50)
-    dfs.WiSARD(threshold=45, num_bits_addr=27, bleaching=True)
+    y_predicted = dfs.WiSARD(threshold=45, num_bits_addr=27, bleaching=True)
 
 
     # Printing results results :
@@ -688,6 +706,11 @@ def main(argv=None):
     print dfs.df_results
     print "----------------------------------------"
     print dfs.df_wisard
+
+    print "Plotting Confusion Matrix for WiSARD with bleaching and \
+threshold=45, num_bits_addr=27 ..."
+    cfg_fig['fout_name'] = "conf_mat_wisard_bleach_t45_n27"
+    fig, ax = plot_confusion_mat(dfs.y_test, y_predicted, cfg_fig=cfg_fig)
 
 
     from IPython import embed; embed() # Enter Ipython
