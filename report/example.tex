@@ -1,0 +1,322 @@
+\documentclass[a4paper, 11pt]{article}
+
+\usepackage{fullpage} % Package to use full page
+\usepackage{parskip} % Package to tweak paragraph skipping
+\usepackage{tikz} % Package for drawing
+\usepackage{amsmath}
+\usepackage{hyperref} % for hyperlink and refs
+\hypersetup{
+    colorlinks = true,
+    linkcolor = brown,
+    linkbordercolor = {white},
+}
+
+\usepackage{multicol} % mutlicol management
+
+% Brazilian encoding :
+\usepackage[brazilian]{babel} % English language/hyphenation
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[utf8]{inputenc}
+
+% Symbols :
+\usepackage{gensymb}
+
+%%%%%%%%% Pictures management : %%%%%%%%%
+\usepackage{graphicx} % to insert png
+\usepackage{adjustbox} % for better figure positionning
+\usepackage[a4paper]{geometry} % for geometry changes in only one page (\newgeometry{...})
+\usepackage[space]{grffile} % allow space in figure path
+\usepackage{float}% Prevent pictures to moves to next page automatically
+
+%%%%%%%%% Algorithm format : %%%%%%%%%
+\usepackage{algpseudocode}
+
+
+%%%%%%%%% Cosmetic Headers and footers : %%%%%%%%%
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancy} % Makes all pages in the document conform to the custom headers and footers
+\fancyhead[R]{}
+\fancyhead[L]{}
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{\thepage} % Page numbering for right footer
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+\setlength{\footskip}{20pt} % Customize the skip of the footer
+\setlength{\textheight}{650pt} % Customize the height of the text
+
+\usepackage{titling} % Title package
+
+%%%%%%%%% Personalized commands : %%%%%%%%%
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+%--------------------------------------------------
+%    TITLE SECTION
+%--------------------------------------------------
+\pretitle{
+  \begin{figure}[H] % floating picture
+  \begin{center}
+  \includegraphics[width=0.60\textwidth]{figures/UFRJ-noticias.png}  
+  \includegraphics[width=0.70\textwidth]{figures/pipe_scheme_states.jpg}  
+\\[\bigskipamount]
+}
+\posttitle{\end{center} \end{figure}}
+
+\title{
+\normalfont \normalsize
+%\textsc{Universidade Federal do Rio de Janeiro} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{0.5pt} \\[0.4cm] % Thin top horizontal rule
+\huge \textbf{Escoamentos Bifásicos}\\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Guillaume Jeusel \\ \\
+Palestra : TransCalor II \\ \\
+Professor : Antonio Mac Dowell De Figueiredo}
+
+\date{\normalsize\today} % Today's date or a custom date
+
+
+\begin{document}
+
+\maketitle % Print the title
+\newpage
+
+%------------------------------------------------------------------------------
+\section{Estudo dos parâmetros no caso de Fases separadas - Película e Núcleo}
+O objetivo dessa seção de determinar a influencia das principais variáveis do modelo de escoamento bifásico anular entre si.
+Ou seja, a influencia :
+\begin{itemize}
+  \item do numero de Reynolds no Núcleo
+  \item do numero de Reynolds na Película
+  \item do gradiente de pressão
+  \item da espessura da película
+\end{itemize}
+Nos vamos nos concentrar somente nos parâmetros adimensionais para ter uma interpretação geral.
+Alem disso, nos vamos considerar que a espessura da película $\delta$ é sempre dada. Isso é porque a determinação do $\delta$ sendo dados dois outras variáveis é muito difícil e envolve sempre o obtenção das raízes de um polinômio de grau 5 de dois variáveis (cf equação 1.33).
+
+As hipoteses físicas desse modelo são as seguintes :
+\begin{enumerate}
+  \item Escoamento em regime permanente
+  \item Escoamento completamente desenvolvido
+  \item Escoamento laminar
+  \item Fluido newtoniano
+  \item Fluido incompressível
+\end{enumerate}
+
+%------------------------------------------------------------------------------
+\subsection{Faixas de valores fisicamente aceitáveis}
+O primeiro trabalho que tem que ser feito é de encontrar as faixas de valores fisicamente aceitáveis para esses parâmetros.
+Para fazer isso, nos vamos nos colocar em casos particulares e tentar dar uma interpretação física ao que acontece.
+
+Seja um escoamento bifásico anular num duto reto vertical de raio $R=1cm$ com uma película de aguá liquida e um núcleo de vapor de aguá.
+
+\begin{center}
+\begin{tabular}{lccc}
+	\hline
+    variável & caract. & valor & unidade \\
+    \hline
+    $\theta$ & angulo do tubo & 90 & $\degree$ \\
+    rho\_p & massa volúmica na película & 958 & $kg/m^3$ \\
+    rho\_n & massa volúmica no núcleo & 0.59 & $kg/m^3$ \\
+    mu\_p & viscosidade na película & $2.83*10^{-4}$ & $Pa.s$ \\
+    mu\_n & viscosidade no núcleo & $1.2*10^{-5}$ & $Pa.s$ \\
+    \hline
+\end{tabular}
+\end{center}
+
+\bigskip
+\textbf{Espessuras consideradas} :\\
+$\eta=[0.1, 0.075, 0.05, 0.025, 0.01, 0.0075, 0.0025, 0.001]$ com $\eta = \frac{\delta}{R}$
+
+\bigskip
+\textbf{Formulações} usadas para a determinação dos \textbf{números de Reynolds} :
+\begin{itemize}
+\item Equaçao 1.33 para o Numero de Reynolds no \textbf{Núcleo} :
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/eq_1_33.jpg}  
+\end{center} \end{figure}
+\item Equação 1.34 para o Numero de Reynolds na \textbf{Película}
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/eq_1_34.jpg}  
+\end{center} \end{figure}
+\end{itemize}
+
+%------------------------------------------------------------------------------
+\subsubsection{Sem efeito viscoso na interface}
+Nesse caso, o gradiente de pressão adimensionalisado é obtido pela equação 1.30 sendo a tensão cisalhante nula na interface :
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{figures/eq_1_30.jpg}  
+\end{center} \end{figure}
+E ele acarreta ser constante igual a $-\rho^*sen \theta$.
+
+Resultados obtidos :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/b_caso_1.png}  
+\end{figure}
+
+Um Reynolds positivo pode ser interpretado por um escoamento ascendente, e um Reynolds negativo pode ser interpretado por um escoamento descendente.
+Por consequência, no caso de ausência de tensão cisalhante na interface, ocorre que o escoamento no Núcleo é descendente, e ascendente na película.
+Essa configuração se justifica porque se não tem tensão cisalhante entre esses fluidos, e que o escoamento é laminar, então eles não interagem entre si dinamicamente falando.
+
+%------------------------------------------------------------------------------
+\subsubsection{Sem fluxo mássico no núcleo}
+Nesse caso, o gradiente de pressão adimensionalisado é obtido pela equação 1.33 sendo o Reynolds no núcleo nulo.
+
+Resultados obtidos :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/b_caso_2.png}  
+\end{figure}
+
+É interessante apontar que quando tem um fluxo mássico nulo no núcleo, o escoamento na película é ascendente ($Re_p$ positivo).
+
+%------------------------------------------------------------------------------
+\subsubsection{Sem fluxo mássico na película}
+Nesse caso, o gradiente de pressão adimensionalisado é obtido pela equação 1.34 sendo o Reynolds na película nulo.
+
+Resultados obtidos :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/b_caso_3.png}  
+\end{figure}
+
+Deve-se apontar que quando o fluxo mássico na película é nula, o escoamento no núcleo é descendente.
+
+%------------------------------------------------------------------------------
+\subsubsection{Velocidade nula na interface}
+Nesse caso, o gradiente de pressão adimensionalisado é obtido pela equação 1.32 sendo a velocidade adimensional na interface nula :
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.8\textwidth]{figures/eq_1_32.jpg}  
+\end{center} \end{figure}
+
+Resultados obtidos :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/b_caso_4.png}  
+\end{figure}
+
+%------------------------------------------------------------------------------
+\subsubsection{Velocidade nula na interface}
+No caso de uma parede considerada perfeitamente lisa, o gradiente de pressão adimensionalisado é obtido pela equação 1.29 sendo a tensão cisalhante na parede nula :
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.6\textwidth]{figures/eq_1_29.jpg}  
+\end{center} \end{figure}
+
+Resultados obtidos :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/b_caso_5.png}  
+\end{figure}
+
+%------------------------------------------------------------------------------
+\subsubsection{Conclusões}
+Todas essas curvas são obtidas executando o script python que se chama \textbf{questao\_1\_b.py} e escolhendo o caso :
+\begin{figure}[H]
+  \includegraphics[width=\textwidth]{figures/screen_script_b.jpg}  
+\end{figure}
+
+É interessante de notar que os parâmetros são muito sensíveis a qualquer pequena variação. Por consequência, a determinação de faixas para obter resultados fisicamente aceitaveis acarreta ser bem complicado.
+No entanto, uma tentativa para obter eles é fornecida no script python \textbf{questao\_1\_a.py}.
+
+\newpage
+%------------------------------------------------------------------------------
+\section{Estudo do modelo de Lockhart \& Martinelli}
+
+\subsection{Introdução}
+A correlação de Lockhart \& Martinelli foi desenvolvida para escoamentos isotérmicos de misturas bifásicas líquido-gás, em regime permanente.
+
+A obtenção de uma expressão para o multiplicador bifásico do modelo de Lockhart \& Martinelli se faz a partir das expressões das perdas de carga do líquido e do gás.
+O raciocínio para obter o $ X^2:= \frac{tensao cisalhante da Pelicula na parede}{tensao cisalhante do Nucleo na parede} := \frac{\tau_{1,P}}{\tau_{1,N}} $ pode ser encontrada na literatura.
+Chegamos na expressão seguinte :
+$ X^2 = \frac{f_p*Re_p^2}{f_n*Re_n^2}*\frac{\rho^*}{\mu^{*^2}} $
+
+E ai vem a questão do calculo dos coeficientes de atrito $f_p$ e $f_n$.
+Generalmente, esses valores são dado pela fórmula de \textbf{Blasius} da forma
+$f = Re^{-n}$.
+No entanto, uma formulação mais elaborada da lei de atrito de \textbf{Darcy-Weisbach} pode ser usada para ter resultados mais justos :
+\begin{center}
+\[f = ( -2*log_{10}(\frac{k}{3.7*D} - \frac{5.16}{R_e}*log_{10}(\frac{k}{3.7*D} + \frac{5.09}{R_e^{0.87}})) )^{-2}\]
+\end{center}
+com $k$ a rugosidade especifica (foi pegada aquela do aço enferrujado $k=5*10^{-4}$).
+Deve ser considerado que essa correlação só vale para Reynolds maiores do que 3000.
+
+%------------------------------------------------------------------------------
+\subsection{Resultados}
+
+O script python \textbf{questao\_2.py} permite obter o grafico seguinte :
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/screen_script_2.jpg}  
+\end{center} \end{figure}
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/khi_2_Re_n_dado.png}  
+\end{center} \end{figure}
+
+Aparentemente, a lei de Blasius sub-estima o valor do $X^2$.
+
+
+\newpage
+%------------------------------------------------------------------------------
+\section{Transferência de calor no Escoamento Bifásico com Mudança de fase}
+
+O objetivo desse trabalho é a determinação dos coeficientes de transferência de calor usando varias correlações sendo o regime bifásico escoando.
+Nos vamos nos colocar no caso de \textbf{escoamento em ebulição saturado} (ou seja 'Saturated Flow Boiling', com um duto vertical.
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=0.08\textwidth]{figures/saturated_flow_boiling.jpg}  
+\end{center} \end{figure}
+
+O escoamento do refrigerente R-22 com fluxo massica de $G=200 kg/m^2.s$ foi pegado, cujas caracteristicas na pressao $P=2*10^5 Pa$ sao as seguintes :
+
+\begin{center}
+\begin{tabular}{lccc}
+	\hline
+    variavel & caract. & valor & unidade \\
+    \hline
+    T\_sat & temperatura de saturação & 260 & K \\
+    P\_sat & pressão de saturação & $2.0965*10^5$ & Pa \\
+    rho\_l & massa volúmica da fase liquida & 1360 & $kg/m^3$ \\
+    rho\_v & massa volúmica da vapor & 9.59 & $kg/m^3$ \\
+    mu\_l & viscosidade do liquido & $282*10^{-6}$ & $N.s/m^2$ \\
+    mu\_v & viscosidade da vapor & $10.9*10^{-6}$ & $N.s/m^2$ \\
+    h\_lv & entalpia especifica de vaporização & $226 * 10^3$ & J/kg \\
+    c\_pl & capacidade calorifica do liquido & $1.13*10^3$ & J/kg.K \\
+    k\_l & condutividade térmica do liquido & 0.109 & W/m.K \\
+    sigma & tensão de superfície & 0.0155 & N/m \\
+    \hline
+\end{tabular}
+\end{center}
+
+Fora implementado as correlações seguinte :
+\begin{enumerate}
+  \item Chen
+  \item Shah
+  \item Schrock and Grossman
+  \item Gungor and Winterton
+  \item Bjorge, Hall and Rohsenow (mais nao dou resultados bons)
+  \item Kandlikar
+\end{enumerate}
+
+Executando o script python \textbf{questao\_3.py} :
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/screen_script_3.jpg}  
+\end{center} \end{figure}
+Foi obtidos as seguintes curvas :
+
+\begin{figure}[H]
+  \begin{center}
+  \includegraphics[width=\textwidth]{figures/h_correlations_result.png}  
+\end{center} \end{figure}
+
+Pode-se ver que as correlações de Chen e Shah são muito próximos, como aqueles do Schrock e Grossman. No entanto, a correlação de Kandlikar não parece dar resultados bons.
+
+\end{document}
+
