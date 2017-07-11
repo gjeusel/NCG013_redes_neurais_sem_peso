@@ -159,7 +159,7 @@ class DataTools_classif:
 
         # Converting last column for classification purpose :
         self.df = self.to_classification_df()
-        # self.df = self.df.drop_duplicates()
+        self.df = self.df.drop_duplicates()
 
         print 'Generating df_bin ...'
         self.df_bin = self.to_classif_bin_df()
@@ -834,15 +834,14 @@ def main():
     # dfs_class.SupportVectorMachine()
     # dfs_class.NearestNeighbors()
     # dfs_class.MultiLayerPerceptron()
-
     # dfs_class.WiSARD_classify()
 
-    # dfs_class.calling_them_all(ncross_val=40)
+    dfs_class.calling_them_all(ncross_val=40)
 
     # get_pictures(dfs_class, dfs_reg)
     # get_wisard_parameters_graph(dfs_class)
 
-    from IPython import embed; embed() # Enter Ipython
+    # from IPython import embed; embed() # Enter Ipython
 
 
     plt.show() # interactive plot
